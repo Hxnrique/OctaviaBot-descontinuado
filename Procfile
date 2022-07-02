@@ -1,1 +1,1 @@
-web: cd dist && node Octavia.js
+octavia: cd dist && node Octavia.js

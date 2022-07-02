@@ -9,7 +9,7 @@ export default class OctaviaWeb extends Koa {
     async start(): Promise<void> {
         this.loadRouters()
         this.use(this.router.routes()).use(this.router.allowedMethods())
-        this.listen(8080)
+        this.listen(process.env.token)
     }
     async loadRouters(): Promise<void> {
         this.router.get("/", (ctx: any, next: any) => {

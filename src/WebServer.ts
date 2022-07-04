@@ -13,7 +13,7 @@ export default class OctaviaWeb extends Koa {
     }
     async loadRouters(): Promise<void> {
         this.router.get("/", (ctx: any, next: any) => {
-            ctx.body = "adfsadf"
+            ctx.body = "a"
             next()
         })
         this.router.post("/interaction", (ctx: any, next: any) => {

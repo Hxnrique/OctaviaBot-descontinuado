@@ -7,6 +7,7 @@ export default class OctaviaWeb extends Koa {
         this.router = new Router()
     }
     async start(): Promise<void> {
+        console.log("[Octavia] Iniciando servidor web.")
         this.loadRouters()
         this.use(this.router.routes()).use(this.router.allowedMethods())
         this.listen(process.env.token)

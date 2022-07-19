@@ -1,3 +1,3 @@
-import OctaviaWeb from "./WebServer";
-
-new OctaviaWeb().start()
+import { Octavia } from "./WebServer"; 
+ 
+new Octavia().run()

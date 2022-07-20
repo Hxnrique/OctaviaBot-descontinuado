@@ -5,6 +5,7 @@ import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
 import { _client, Collections } from "./Functions/index"
 import { REST } from "@discordjs/rest"
+import { MembershipScreeningFieldType } from "discord-api-types/v10";
 class Octavia {
     app: any;
     router: any;
@@ -49,6 +50,17 @@ class Octavia {
             switch(interaction.type){
                 case 2: {
                     this.cache.users[interaction.member.user.id] = interaction.member.user
+                    if(!this.cache.guilds[interaction.guild_id]){
+                        this.cache.guilds[interaction.guild_id] = {
+                            members: {
+                                get: (userId: string) => {
+                                    return this.cache.guilds[interaction.guild_id].members[userId]
+                                },
+                                fetchMember: this.options.getMembers
+                            }
+                        }
+                    }
+                    this.cache.guilds[interaction.guild_id].members[interaction.member.user.id] = interaction.member
                     let command = this.handlers.commands.find((x: any) => x.name == interaction.data.name)
                     if(!command) return res.send({
                         type: 4,
@@ -68,6 +80,20 @@ class Octavia {
                         })
                     }
                 }
+                case 5: {
+                    interaction.getQuestion = (id: number, name: string, ) => {
+                        return interaction.data.components[id].components.find((_name: any) => _name.custom_id == name).value
+                    }
+                    let _command = interaction.data.custom_id.split(":")[0]
+                    let command = this.handlers.commands.find((x: any) => x.name == _command)
+                    if(command){
+                        command.runCollection({
+                            interaction,
+                            res,
+                            req
+                        })
+                    }
+                }
             }
         })
     }
@@ -81,10 +107,8 @@ class Octavia {
                 this.handlers.commands.push(_command)
             }
         }
-        /*
-        let commands = Promise.all(this.handlers.commands.map(a => a.data))
+        let commands = await Promise.all(this.handlers.commands.map((a: any) => a.data))
         this.options.registerCommands(commands)
-        */
     }
 }
 export { Octavia }

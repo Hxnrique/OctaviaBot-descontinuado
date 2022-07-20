@@ -24,12 +24,12 @@ class _client {
         }
     }
     async getMembers(guildID: string,userID: string): Promise<APIGuildMember> {
-        let member = this.client.cache.users.get(userID)
+        let member = this.client.cache.guilds[guildID].members[userID]
         if(member){
             return member
         } else {
             member = await this.client.rest.get(Routes.guildMember(guildID, userID))
-            this.client.cache.members.set(member.id, member)
+            this.client.cache.guilds[guildID].members[userID] = member
             return member
         }
     }

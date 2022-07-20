@@ -1,9 +1,5 @@
 
 import { _client } from "./Client"
-import { getUser, users} from "./Collections";
+import { Collections } from "./Collections";
 
-let Collections = {
-    getUser,
-    users
-}
 export { _client, Collections}

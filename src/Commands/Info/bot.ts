@@ -13,12 +13,12 @@ export default class BotCommand extends Command {
 					{
 						type: 1,
 						name: "info",
-						description: "[ 🛌 BOT ] Minhas informações, ferramentas que foram utilizadas para me criar e muito mais."
+						description: "[🛌 Bot ] Minhas informações, ferramentas que foram utilizadas para me criar e muito mais."
 					},
 					{
 						type: 1,
 						name: "invite",
-						description: "[ 🏡 INVITE ] Obtenha meu link para me adicionar em seu servidor."
+						description: "[ 🏡 Invite ] Obtenha meu link para me adicionar em seu servidor."
 					}
 				]
 			}

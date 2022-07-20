@@ -1,14 +1,12 @@
 import { APIUser } from "discord-api-types/v10";
 
-let users = Object({})
-function getUser(userid: string) {
-    let user: any;
-    for(let _user of users){
-     if(userid ==_user.id){
-        user = _user
-     }
-     return user ? user : false
-    }
-}
+let Collections = Object({
+    users: {
+        get: (userId: string) => {
+            return Collections.users[userId]
+        }
+    },
+    guilds: {}
+})
 
-export { users, getUser}
+export { Collections }

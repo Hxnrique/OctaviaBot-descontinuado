@@ -21,7 +21,7 @@ class Octavia {
         this.options = new _client(this)
         this.start = Date.now()
         this.handlers = {
-            commands: new Map()
+            commands: []
         }
         this.rest = new REST({version: "10"}).setToken(config.discordToken)
         this.cache = Collections
@@ -48,8 +48,8 @@ class Octavia {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {
-                    this.cache.users.set(interaction.member.user.id, interaction.member.user)
-                    let command = this.handlers.commands.get(interaction.data.name)
+                    this.cache.users[interaction.member.user.id] = interaction.member.user
+                    let command = this.handlers.commands.find((x: any) => x.name == interaction.data.name)
                     if(!command) return res.send({
                         type: 4,
                         data: {
@@ -61,7 +61,7 @@ class Octavia {
                         return interaction.data.options.find((_name: any) => _name.name == name)
                     }
                     if(command){
-                        return this.handlers.commands.get(interaction.data.name).run({
+                        return command.run({
                             interaction,
                             res,
                             req
@@ -78,13 +78,11 @@ class Octavia {
             for(let cmd of _c){
                 let command = (await import(`./Commands/${c}/${cmd}`)).default
                 let _command = new command(this)
-                this.handlers.commands.set(_command.name, _command)
+                this.handlers.commands.push(_command)
             }
         }
-        /*let commands: any[] = []
-        let _commands: any = this.handlers.commands.forEach((a: any) => {
-           commands.push(a.data)
-        })
+        /*
+        let commands = Promise.all(this.handlers.commands.map(a => a.data))
         this.options.registerCommands(commands)
         */
     }

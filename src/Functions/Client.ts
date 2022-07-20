@@ -13,12 +13,13 @@ class _client {
         return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
     }
     async getUser(userID: string): Promise<APIUser> {
-        let user = this.client.cache.users.get(userID)
+        let user = this.client.cache.users[userID]
         if(user){
             return user
         } else {
             user = await this.client.rest.get(Routes.user(userID))
-            this.client.cache.users.set(user.id, user)
+            this.client.cache.users[user.id] = user
+            console.log(`[GET APIUser] ${user.id}`)
             return user
         }
     }

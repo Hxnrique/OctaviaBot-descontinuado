@@ -25,6 +25,7 @@ export default class BotCommand extends Command {
 		})
 	}
 	async run(params: any): Promise<void> {
+		let dono = await this.client.options.getUser("485101049548636160")
 		let _client = await this.client.options.getUser(this.client.config.discordCLIENTId)
 		if(params.interaction.getString("invite")){
 			params.res.send({
@@ -55,7 +56,7 @@ export default class BotCommand extends Command {
 							},
 							{
 								name: "💡| Tudo e mais um pouco",
-								value: "Database: **[mongodb](https://www.mongodb.com/pt-br)**\nVersão da api do Discord: **v10**\nBiblioteca auxiliar: **[discord-api-types](https://discord-api-types.dev/)**\nHospedagem: **[Heroku](https://www.heroku.com/)**"
+								value: "Meu desenvolvedor: **"+ dono.username + "/" + dono.id+ "**\nDatabase: **[mongodb](https://www.mongodb.com/pt-br)**\nVersão da api do Discord: **v10**\nBiblioteca auxiliar: **[discord-api-types](https://discord-api-types.dev/)**\nHospedagem: **[Heroku](https://www.heroku.com/)**"
 							}
 						],
 						author: { name: _client.username, icon_url: this.client.options.getAvatarURL(_client) }

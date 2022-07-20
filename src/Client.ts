@@ -1,10 +1,10 @@
 
 import Express, { Router, Response, Request } from "express"
 import { readdir } from "node:fs/promises";
-import config from "./../config"
+import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
-import { Client, Collections } from "./Functions/index"
-import { APIUser } from "discord-api-types/v10";
+import { _client, Collections } from "./Functions/index"
+import { REST } from "@discordjs/rest"
 class Octavia {
     app: any;
     router: any;
@@ -12,19 +12,23 @@ class Octavia {
     handlers: {
         commands: any
     }
-    cache: any
-    color: number
-    start: number
+    cache: any;
+    color: number;
+    start: number;
+    rest: any;
+    options: any;
     constructor(){
+        this.options = new _client(this)
         this.start = Date.now()
         this.handlers = {
             commands: new Map()
         }
+        this.rest = new REST({version: "10"}).setToken(config.discordToken)
         this.cache = Collections
         this.app = Express()
         this.router = Router()
         this.config = config
-        this.color = Client.color("#bf9ee9")
+        this.color = this.options.color("#bf9ee9")
     }
     uptime(): number {
         return Math.floor(Date.now() - this.start)
@@ -44,6 +48,7 @@ class Octavia {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {
+                    this.cache.members.set(interaction.member.id, interaction.member)
                     this.cache.users.set(interaction.member.user.id, interaction.member.user)
                     let command = this.handlers.commands.get(interaction.data.name)
                     if(!command) return res.send({
@@ -77,6 +82,11 @@ class Octavia {
                 this.handlers.commands.set(_command.name, _command)
             }
         }
+        let commands: any[] = []
+        let _commands: any = this.handlers.commands.forEach((a: any) => {
+           commands.push(a.data)
+        })
+        this.options.registerCommands(commands)
     }
 }
 export { Octavia }

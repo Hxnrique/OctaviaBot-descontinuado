@@ -1,16 +1,40 @@
 import { Command } from "../../Handlers/Command";
-import type { Octavia } from "../../WebServer"
-import { Client } from "../../Functions";
+import type { Octavia } from "../../Client"
 import { loadavg } from "node:os";
 export default class BotCommand extends Command {
 	constructor(Client: Octavia){
 		super(Client,{
 			name: "bot",
+			data: {
+				name: "bot",
+				type: 1,
+				description: "[🤖]  Tudo e mais um pouco de mim",
+				options: [
+					{
+						type: 1,
+						name: "info",
+						description: "[ 🛌 BOT ] Minhas informações, ferramentas que foram utilizadas para me criar e muito mais."
+					},
+					{
+						type: 1,
+						name: "invite",
+						description: "[ 🏡 INVITE ] Obtenha meu link para me adicionar em seu servidor."
+					}
+				]
+			}
 		})
 	}
 	async run(params: any): Promise<void> {
+		let _client = await this.client.options.getUser(this.client.config.discordCLIENTId)
+		if(params.interaction.getString("invite")){
+			params.res.send({
+				type: 4,
+				data: {
+					content: `❤️[Clique aqui para me convidar](https://discord.com/api/oauth2/authorize?client_id=${_client.id}&permissions=0&scope=bot%20applications.commands)`,
+				}
+			})
+		}
 		if(params.interaction.getString("info")){
-			let _client = await Client.getUser(this.client.config.discordCLIENTId)
 			params.res.send({
 				type: 4,
 				data: {
@@ -34,7 +58,7 @@ export default class BotCommand extends Command {
 								value: "Database: **[mongodb](https://www.mongodb.com/pt-br)**\nVersão da api do Discord: **v10**\nBiblioteca auxiliar: **[discord-api-types](https://discord-api-types.dev/)**\nHospedagem: **[Heroku](https://www.heroku.com/)**"
 							}
 						],
-						author: { name: _client.username, icon_url: Client.getAvatarURL(_client) }
+						author: { name: _client.username, icon_url: this.client.options.getAvatarURL(_client) }
 					}],
 					components: [{
 						type: 1,

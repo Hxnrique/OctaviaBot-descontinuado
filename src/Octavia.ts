@@ -1,3 +1,3 @@
-import { Octavia } from "./WebServer"; 
+import { Octavia } from "./Client"; 
  
 new Octavia().run()

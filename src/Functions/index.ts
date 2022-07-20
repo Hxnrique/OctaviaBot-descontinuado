@@ -1,4 +1,5 @@
-import Client from "./Client";
+
+import { _client } from "./Client"
 import Collections from "./Collections";
 
-export { Client, Collections }
+export { _client, Collections }

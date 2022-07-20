@@ -48,7 +48,6 @@ class Octavia {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {
-                    this.cache.members.set(interaction.member.id, interaction.member)
                     this.cache.users.set(interaction.member.user.id, interaction.member.user)
                     let command = this.handlers.commands.get(interaction.data.name)
                     if(!command) return res.send({
@@ -82,11 +81,12 @@ class Octavia {
                 this.handlers.commands.set(_command.name, _command)
             }
         }
-        let commands: any[] = []
+        /*let commands: any[] = []
         let _commands: any = this.handlers.commands.forEach((a: any) => {
            commands.push(a.data)
         })
         this.options.registerCommands(commands)
+        */
     }
 }
 export { Octavia }

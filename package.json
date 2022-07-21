@@ -5,7 +5,7 @@
   "main": "Octavia.js",
   "scripts": {
     "build": "tsc",
-    "start": "cd ./dist && cd ./src && node Octavia.js"
+    "start": "npx prisma generate && cd ./dist && cd ./src && node Octavia.js"
   },
   "keywords": [],
   "author": "",

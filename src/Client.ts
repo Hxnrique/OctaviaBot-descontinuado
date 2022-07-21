@@ -5,7 +5,6 @@ import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
 import { _client, Collections } from "./Functions/index"
 import { REST } from "@discordjs/rest"
-import { MembershipScreeningFieldType } from "discord-api-types/v10";
 class Octavia {
     app: any;
     router: any;
@@ -24,7 +23,7 @@ class Octavia {
         this.handlers = {
             commands: []
         }
-        this.rest = new REST({version: "10"}).setToken(config.discordToken)
+        this.rest = new REST({version: "10", hashLifetime: 86400000}).setToken(config.discordToken)
         this.cache = Collections
         this.app = Express()
         this.router = Router()
@@ -107,8 +106,6 @@ class Octavia {
                 this.handlers.commands.push(_command)
             }
         }
-        let commands = await Promise.all(this.handlers.commands.map((a: any) => a.data))
-        this.options.registerCommands(commands)
     }
 }
 export { Octavia }

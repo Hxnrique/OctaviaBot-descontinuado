@@ -1,4 +1,3 @@
-import { rmSync } from "fs";
 import { Octavia } from "../../Client";
 import { Command } from "../../Handlers/Command";
 import { inspect } from "util";
@@ -23,8 +22,8 @@ export default class DevCommand extends Command {
             return params.res.send({
                 type: 4,
                 data: {
+                    content: `<@!${params.interaction.member.user.id}>, esse comando é apenas para meus desenvolvedores.`,
                     flags: 64,
-                    content: `<@!${params.interaction.member.user.id}>, esse comando é apenas para meus desenvolvedores.`
                 }
             })
         }

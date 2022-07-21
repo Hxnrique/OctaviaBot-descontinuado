@@ -3,7 +3,8 @@ import Express, { Router, Response, Request } from "express"
 import { readdir } from "node:fs/promises";
 import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
-import { _client, Collections } from "./Functions/index"
+import { _client } from "./Functions/Client";
+import { Collections } from "./Functions/Collections";
 import { REST } from "@discordjs/rest"
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
@@ -88,8 +89,7 @@ class Octavia {
                     interaction.getQuestion = (id: number, name: string, ) => {
                         return interaction.data.components[id].components.find((_name: any) => _name.custom_id == name).value
                     }
-                    let _command = interaction.data.custom_id.split(":")[0]
-                    let command = this.handlers.commands.find((x: any) => x.name == _command)
+                    let command = this.handlers.commands.find((x: any) => x.name == interaction.data.custom_id.split(":")[0])
                     if(command){
                         command.runCollection({
                             interaction,

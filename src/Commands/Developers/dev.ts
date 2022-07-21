@@ -39,7 +39,7 @@ export default class DevCommand extends Command {
                             type: 4,
                             custom_id: "eval:code",
                             label: "Código",
-                            style: 1,
+                            style: 2,
                             min_length: 1,
                             max_length: 4000,
                             placeholder: "Digite o script aqui",

@@ -5,6 +5,8 @@ import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
 import { _client, Collections } from "./Functions/index"
 import { REST } from "@discordjs/rest"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 class Octavia {
     app: any;
     router: any;
@@ -17,23 +19,26 @@ class Octavia {
     start: number;
     rest: any;
     options: any;
+    prisma: any;
     constructor(){
         this.options = new _client(this)
         this.start = Date.now()
         this.handlers = {
             commands: []
         }
-        this.rest = new REST({version: "10", hashLifetime: 86400000}).setToken(config.discordToken)
+        this.rest = new REST({version: "10"}).setToken(config.discordToken)
         this.cache = Collections
         this.app = Express()
         this.router = Router()
         this.config = config
         this.color = this.options.color("#bf9ee9")
+        this.prisma = prisma
     }
     uptime(): number {
         return Math.floor(Date.now() - this.start)
     }
     async run(){
+        await prisma.$connect()
         await this.app.use(this.router)
         await this.loadCommands()
         await this.loadRouters()

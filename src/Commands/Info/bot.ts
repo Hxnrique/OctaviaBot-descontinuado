@@ -26,7 +26,7 @@ export default class BotCommand extends Command {
 	}
 	async run(params: any): Promise<void> {
 		let dono = await this.client.options.getUser("485101049548636160")
-		let _client = await this.client.options.getUser(this.client.config.discordCLIENTId)
+		let _client = await this.client.options.getUser(process.env.DISCORD_USER_ID as string)
 		if(params.interaction.getString("invite")){
 			params.res.send({
 				type: 4,

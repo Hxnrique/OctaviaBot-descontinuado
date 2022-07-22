@@ -16,20 +16,20 @@ class _client {
         if(this.client.cache.users[userID]){
             return this.client.cache.users[userID]
         } else {
-            let user = await this.client.rest.get(Routes.user(userID)).catch((e: any) => e)
+            let user = await this.client.rest.get(Routes.user(userID)).catch((e: any) => false)
             if(!user)return user
             this.client.cache.users[user.id] = user
             console.log(`[GET APIUser] ${user.id}`)
             return user
         }
     }
-    async getMembers(guildID: string,userID: string): Promise<void> {
-        if(this.client.cache.guilds[guildID].members[userID]){
-            return this.client.cache.guilds[guildID].members[userID]
+    async getMembers(guild_id: string,user_id: string): Promise<void> {
+        if(this.client.cache.guilds[guild_id].members[user_id]){
+            return this.client.cache.guilds[guild_id].members[user_id]
         } else {
-            let member = await this.client.rest.get(Routes.guildMember(guildID, userID)).catch((e: any) => e)
+            let member = await this.client.rest.get(Routes.guildMember(guild_id, user_id)).catch((e: any) => false)
             if(!member)return member
-            this.client.cache.guilds[guildID].members[userID] = member
+            this.client.cache.guilds[guild_id].members[user_id] = member
             console.log(`[GET APIMember] ${member.id}`)
             return member
         }
@@ -42,17 +42,17 @@ class _client {
     async createMessage(channel_id: string, data: any): Promise<void> {
         return await this.client.rest.post(Routes.channelMessages(channel_id),{
             body: data
-        }).catch((e: any) => e), console.log(`[GET APIMessage] ${channel_id}`)
+        }).catch((e: any) => false), console.log(`[GET APIMessage] ${channel_id}`)
     }
     async editMessage(channel_id: string, message_id: string, newMessageData: any): Promise<void> {
-        return await this.client.rest.post(Routes.channelMessageCrosspost(channel_id, message_id),{
+        return await this.client.rest.patch(Routes.channelMessage(channel_id, message_id),{
             body: newMessageData
-        }).catch((e: any) => e)
+        }).catch((e: any) => false), console.log(`[GET APIEDITMessage] ${channel_id}`)
     }
     async editOriginalMessage(interaction_id: string, interaction_token: string, newBody: any){
         return await this.client.rest.patch(Routes.webhookMessage(interaction_id, interaction_token),{
             body: newBody
-        }).catch((e: any) => e)
+        }).catch((e: any) => false), console.log(`[GET APIEDITORIGINALMessage] ${interaction_id}`)
     }
 
 }

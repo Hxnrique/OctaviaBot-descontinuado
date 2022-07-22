@@ -1,7 +1,6 @@
 
 import Express, { Router, Response, Request } from "express"
 import { readdir } from "node:fs/promises";
-import config from "../config"
 import { verifyKeyMiddleware } from "discord-interactions"
 import { _client } from "./Functions/Client";
 import { Collections } from "./Functions/Collections";
@@ -27,11 +26,10 @@ class Octavia {
         this.handlers = {
             commands: []
         }
-        this.rest = new REST({version: "10"}).setToken(config.discordToken)
+        this.rest = new REST({version: "10"}).setToken(process.env.DISCORD_TOKEN as string)
         this.cache = Collections
         this.app = Express()
         this.router = Router()
-        this.config = config
         this.color = this.options.color("#bf9ee9")
         this.prisma = prisma
     }
@@ -50,7 +48,7 @@ class Octavia {
         this.router.get("/", (req: Request, res: Response) => {
             return res.sendStatus(200)
         })
-        this.router.post("/interaction", verifyKeyMiddleware(this.config.discordPUBLICKey), (req: Request, res: Response) => {
+        this.router.post("/interaction", verifyKeyMiddleware(process.env.DISCORD_PUBLIC_TOKEN as string), (req: Request, res: Response) => {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {

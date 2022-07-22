@@ -2,8 +2,7 @@
 import Express, { Router, Response, Request } from "express"
 import { readdir } from "node:fs/promises";
 import { verifyKeyMiddleware } from "discord-interactions"
-import { _client } from "./Functions/Client";
-import { Collections } from "./Functions/Collections";
+import { _client, Collections } from "./Functions/index";
 import { REST } from "@discordjs/rest"
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()

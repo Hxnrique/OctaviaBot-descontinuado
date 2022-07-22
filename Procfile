@@ -1,1 +1,0 @@
-worker: cd ./dist && cd ./src && node Octavia.js

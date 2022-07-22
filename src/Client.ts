@@ -47,7 +47,7 @@ class Octavia {
         this.router.get("/", (req: Request, res: Response) => {
             return res.sendStatus(200)
         })
-        this.router.post("/interaction", verifyKeyMiddleware(process.env.DISCORD_PUBLIC_TOKEN as string), (req: Request, res: Response) => {
+        this.router.post("/interaction", verifyKeyMiddleware(process.env.DISCORD_PUBLIC_KEY as string), (req: Request, res: Response) => {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {
@@ -55,10 +55,12 @@ class Octavia {
                     if(!this.cache.guilds[interaction.guild_id]){
                         this.cache.guilds[interaction.guild_id] = {
                             members: {
-                                get: (userId: string) => {
-                                    return this.cache.guilds[interaction.guild_id].members[userId]
+                                get: (user_id: string) => {
+                                    return this.cache.guilds[interaction.guild_id].members[user_id]
                                 },
-                                fetchMember: this.options.getMembers
+                                fetch: async (user_id: string) => {
+                                    return this.options.getMember(interaction.guild_id, user_id)
+                                }
                             }
                         }
                     }

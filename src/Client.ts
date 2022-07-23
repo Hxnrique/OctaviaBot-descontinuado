@@ -87,6 +87,15 @@ class Octavia {
                                 user_id: interaction.member.user.id
                             }
                         })
+                        if(user.blacklist){
+                            return res.send({
+                                type: 4,
+                                data: {
+                                    content: `<!@${interaction.member.user.id}>, você está proibido de utilizar meus comandos`,
+                                    flags: 64
+                                }
+                            })
+                        }
                         guild = await this.prisma.guild.findUnique({
                             where: {
                                 guild_id: interaction.guild_id
@@ -97,6 +106,15 @@ class Octavia {
                                 guild_id: interaction.guild_id
                             }
                         })
+                        if(guild.blacklist){
+                            return res.send({
+                                type: 4,
+                                data: {
+                                    content: `<!@${interaction.member.user.id}>, O servidor está em minha blacklist`,
+                                    flags: 64
+                                }
+                            })
+                        }
                     }
                     if(command){
                         return command.run({

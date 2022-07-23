@@ -117,6 +117,7 @@ class Octavia {
                                 lastCommand: Date.now()
                             }
                         })
+                        console.log(User, Guild, GuildMember)
                         return command.run({
                             interaction,
                             res,

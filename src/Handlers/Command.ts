@@ -3,13 +3,13 @@ import { RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord-api-typ
 
 interface CommandData {
 	name: string,
-    data: RESTPostAPIChatInputApplicationCommandsJSONBody
+    data: RESTPostAPIChatInputApplicationCommandsJSONBody,
 }
 import type { Octavia } from "../Client"
 class Command {
     client: Octavia;
     name: string;
-    data: RESTPostAPIChatInputApplicationCommandsJSONBody
+    data: RESTPostAPIChatInputApplicationCommandsJSONBody;
     constructor(Client: Octavia, Data: CommandData){
         this.client = Client
         this.name = Data.name || ""

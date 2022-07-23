@@ -96,18 +96,7 @@ class Octavia {
                                 guild_id: interaction.guild_id
                             }
                         })
-                        let GuildMember =  await this.prisma.GuildMember.findFirst({
-                            where: {
-                                user_id: interaction.member.user.id,
-                                guild_id: interaction.guild_id
-                            }
-                        })
-                        if(!GuildMember) GuildMember = await this.prisma.GuildMember.create({
-                            data: {
-                                user_id: interaction.member.user.id,
-                                guild_id: interaction.guild_id
-                            }
-                        })
+                        
                         return command.run({
                             interaction,
                             res,

@@ -79,7 +79,7 @@ class Octavia {
                     if(command.database){
                         user = await this.prisma.user.findUnique({
                             where: {
-                                user_id: interaction.user_id
+                                user_id: interaction.member.user.id
                             }
                         })
                         if(!user) user = await this.prisma.user.create({

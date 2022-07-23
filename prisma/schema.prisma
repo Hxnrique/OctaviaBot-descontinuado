@@ -13,16 +13,13 @@ datasource db {
 model User {
    id  String @id @default(auto()) @map("_id") @db.ObjectId
    user_id String @unique
-   @@map("Users")
 }
 model Guild {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   guild_id String @unique
-  @@map("Guilds")
 }
 model GuildMember {
   member_id String
   guild_Id String
   id String @id @default(uuid()) @map("_id")
-  @@map("GuildMembers")
 }

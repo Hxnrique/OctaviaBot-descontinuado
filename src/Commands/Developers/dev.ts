@@ -4,6 +4,7 @@ import { inspect } from "util";
 export default class DevCommand extends Command {
     constructor(Client: Octavia){
         super(Client, {
+            database: false,
             name: "dev",
             data: {
                 type: 1,

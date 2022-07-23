@@ -4,6 +4,7 @@ import { loadavg } from "node:os";
 export default class BotCommand extends Command {
 	constructor(Client: Octavia){
 		super(Client,{
+			database: false,
 			name: "bot",
 			data: {
 				name: "bot",

@@ -75,8 +75,32 @@ class Octavia {
                     interaction.getString = (name: string) => {
                         return interaction.data.options.find((_name: any) => _name.name == name)
                     }
+                    let user, guild;
+                    if(command.database){
+                        user = await this.prisma.user.findUnique({
+                            where: {
+                                user_id: interaction.user_id
+                            }
+                        })
+                        if(!user) user = await this.prisma.user.create({
+                            data: {
+                                user_id: interaction.member.user.id
+                            }
+                        })
+                        guild = await this.prisma.guild.findUnique({
+                            where: {
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                        if(!guild) guild = await this.prisma.guild.create({
+                            data: {
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                    }
                     if(command){
                         return command.run({
+                            database: {user, guild},
                             interaction,
                             res,
                             req

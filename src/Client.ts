@@ -84,7 +84,6 @@ class Octavia {
                         if(!User) User = await this.prisma.User.create({
                             data: {
                                 user_id: interaction.member.user.id,
-                                last_command: Date.now()
                             }
                         })
                         let Guild = await this.prisma.Guild.findUnique({
@@ -107,14 +106,6 @@ class Octavia {
                             data: {
                                 user_id: interaction.member.user.id,
                                 guild_id: interaction.guild_id
-                            }
-                        })
-                        this.prisma.User.update({
-                            where: {
-                                user_id: interaction.member.user.id
-                            },
-                            data: {
-                                lastCommand: Date.now()
                             }
                         })
                         return command.run({

@@ -4,7 +4,7 @@ import { readdir } from "node:fs/promises";
 import { verifyKeyMiddleware } from "discord-interactions"
 import { _client, Collections } from "./Functions/index";
 import { REST } from "@discordjs/rest"
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
 class Octavia {
     app: any;
     router: any;
@@ -17,7 +17,7 @@ class Octavia {
     start: number;
     rest: any;
     options: any;
-    prisma: any;
+    prisma: PrismaClient;
     constructor(){
         this.options = new _client(this)
         this.start = Date.now()
@@ -75,6 +75,26 @@ class Octavia {
                     interaction.getString = (name: string) => {
                         return interaction.data.options.find((_name: any) => _name.name == name)
                     }
+                    let user = await this.prisma.user.findUnique({
+                        where: {
+                            user_id: interaction.member.user.id
+                        }
+                    })
+                    if(!user) user = await this.prisma.user.create({
+                        data: {
+                            user_id: interaction.member.user.id
+                        }
+                    })
+                    let guild = await this.prisma.guild.findUnique({
+                        where: {
+                            guild_id: interaction.guild_id
+                        }
+                    })
+                    if(!guild) guild = await this.prisma.guild.findUnique({
+                        where: {
+                            guild_id: interaction.guild_id
+                        }
+                    })
                     if(command){
                         return command.run({
                             interaction,

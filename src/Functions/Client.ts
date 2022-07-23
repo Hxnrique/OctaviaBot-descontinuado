@@ -12,13 +12,13 @@ class _client {
     getAvatarURL(user: APIUser): string {
         return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
     }
-    async getUser(userID: string): Promise<void> {
-        if(this.client.cache.users[userID]){
-            return this.client.cache.users[userID]
+    async getUser(user_id: string): Promise<void> {
+        if(this.client.cache.users[user_id]){
+            return this.client.cache.users[user_id]
         } else {
-            let user = await this.client.rest.get(Routes.user(userID)).catch((e: any) => false)
+            let user = await this.client.rest.get(Routes.user(user_id)).catch((e: any) => false)
             if(!user)return user
-            this.client.cache.users[user.id] = user
+            this.client.cache.users[user_id] = user
             console.log(`[GET APIUser] ${user.id}`)
             return user
         }

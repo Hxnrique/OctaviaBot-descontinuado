@@ -5,7 +5,6 @@ import { verifyKeyMiddleware } from "discord-interactions"
 import { _client, Collections } from "./Functions/index";
 import { REST } from "@discordjs/rest"
 import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
 class Octavia {
     app: any;
     router: any;
@@ -30,13 +29,13 @@ class Octavia {
         this.app = Express()
         this.router = Router()
         this.color = this.options.color("#bf9ee9")
-        this.prisma = prisma
+        this.prisma = new PrismaClient()
     }
     uptime(): number {
         return Math.floor(Date.now() - this.start)
     }
     async run(){
-        await prisma.$connect()
+        await this.prisma.$connect()
         await this.app.use(this.router)
         await this.loadCommands()
         await this.loadRouters()
@@ -47,7 +46,7 @@ class Octavia {
         this.router.get("/", (req: Request, res: Response) => {
             return res.sendStatus(200)
         })
-        this.router.post("/interaction", verifyKeyMiddleware(process.env.DISCORD_PUBLIC_KEY as string), (req: Request, res: Response) => {
+        this.router.post("/interaction", verifyKeyMiddleware(process.env.DISCORD_PUBLIC_KEY as string), async (req: Request, res: Response) => {
             let interaction: any = req.body;
             switch(interaction.type){
                 case 2: {
@@ -77,6 +76,47 @@ class Octavia {
                         return interaction.data.options.find((_name: any) => _name.name == name)
                     }
                     if(command){
+                        let User = await this.prisma.User.findUnique({
+                            where: {
+                                user_id: interaction.member.user.id
+                            }
+                        })
+                        if(!User) User = await this.prisma.User.create({
+                            data: {
+                                user_id: interaction.member.user.id,
+                                last_command: Date.now()
+                            }
+                        })
+                        let Guild = await this.prisma.Guild.findUnique({
+                            where: {
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                        if(!Guild) Guild = await this.prisma.Guild.create({
+                            data: {
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                        let GuildMember =  await this.prisma.GuildMember.findFirst({
+                            where: {
+                                user_id: interaction.member.user.id,
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                        if(!GuildMember) GuildMember = await this.prisma.GuildMember.create({
+                            data: {
+                                user_id: interaction.member.user.id,
+                                guild_id: interaction.guild_id
+                            }
+                        })
+                        this.prisma.User.update({
+                            where: {
+                                user_id: interaction.member.user.id
+                            },
+                            data: {
+                                lastCommand: Date.now()
+                            }
+                        })
                         return command.run({
                             interaction,
                             res,

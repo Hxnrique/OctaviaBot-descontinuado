@@ -96,7 +96,7 @@ export default class ConfigCommand extends Command {
                 flags: 64
             }
         })
-        if((params.interaction.member.user.id).includes(cacheMessage.users))return params.res.send({
+        if(!params.interaction.member.user.id.includes(cacheMessage.users))return params.res.send({
             type: 4,
             data: {
                 content: 4,

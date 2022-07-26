@@ -96,14 +96,11 @@ export default class ConfigCommand extends Command {
                 flags: 64
             }
         })
-        if(!params.interaction.member.user.id.includes(cacheMessage.users))return params.res.send({
+        if(!params.interaction.member.user.id.includes(cacheMessage.data.users))return params.res.send({
             type: 4,
-            data: {
-                content: 4,
-                data: {
-                    content: `❌ | <@!${params.interaction.member.user.id}>, esse painel de configurações não é para você.`,
-                    flags: 64
-                }
+            data: {   
+                content: `❌ | <@!${params.interaction.member.user.id}>, esse painel de configurações não é para você.`,
+                flags: 64
             }
         })
         let _guild = await this.client.prisma.guild.findUnique({

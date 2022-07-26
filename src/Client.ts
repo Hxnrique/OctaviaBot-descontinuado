@@ -61,11 +61,6 @@ class Octavia {
                     this.cache.users[interaction.member.user.id] = interaction.member.user
                     if(!this.cache.guilds[interaction.guild_id]){
                         this.cache.guilds[interaction.guild_id] = {
-                            members: {
-                                fetch: async (user_id: string) => {
-                                    return this.options.getMember(interaction.guild_id, user_id)
-                                }
-                            }
                         }
                         await this.options.getGuild(interaction.guild_id)
                     }

@@ -43,6 +43,7 @@ class _client {
             let member = await this.client.rest.get(Routes.guildMember(guild_id, user_id)).catch((e: any) => false)
             if(!member)return member
             this.client.cache.guilds[guild_id].members[user_id] = member
+            this.client.cache.users[user_id] = member.user
             console.log(`[GET APIMember] ${member.user.id}`)
             return member
         }

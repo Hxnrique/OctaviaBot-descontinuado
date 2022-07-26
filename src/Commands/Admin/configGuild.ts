@@ -42,6 +42,8 @@ export default class ConfigCommand extends Command {
                 author: {icon_url: this.client.options.getAvatarURL(this.client.cache.client.user), name: `${this.client.cache.client.user.username} | Economy`},
                 thumbnail: {url: this.client.options.getIconURL(guild)},
                 color: this.client.color,
+                timestamp: new Date(),
+                footer: { text: `Usado por: ${params.interaction.member.user.id}`,icon_url: this.client.options.getAvatarURL(params.interaction.member.user)}
             }
         }
         if(params.interaction.getString("economy")){

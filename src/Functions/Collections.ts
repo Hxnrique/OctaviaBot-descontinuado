@@ -12,12 +12,33 @@ let Collections = Object({
         }
     },
     levelGuilds: {
-        "2": {
-            value: 15000
+        "1": {
+            works: {
+                "Caçador de bugs": {
+                    value: 0,
+                    experience: 0,
+                },
+                "Caçador de vírus": {
+                    value: 1000,
+                    experience: 5
+                },
+            }
         },
-        "3": {
-            value: 30000
-        }
+        "2": {
+            value: 30000,
+            works: {
+                "Caçador de lendas": {
+                    value: 1500,
+                    experience: 7,
+                    maxEarn: 500
+                },
+                "Caçador de chapéus":{
+                    value: 2000,
+                    experience: 10,
+                    maxEarn: 650
+                }
+            }
+        },
     },
     messageComponents: {
         get(interaction_id: string){

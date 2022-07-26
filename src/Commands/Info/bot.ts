@@ -59,6 +59,8 @@ export default class BotCommand extends Command {
 								value: "Meu desenvolvedor: **"+ dono.username + "/" + dono.id+ "**\nDatabase: **[mongodb](https://www.mongodb.com/pt-br)**\nVersão da api do Discord: **v10**\nBiblioteca auxiliar: **[discord-api-types](https://discord-api-types.dev/)**\nHospedagem: **[Heroku](https://www.heroku.com/)**"
 							}
 						],
+						timestamp: new Date(),
+                        footer: { text: `Usado por: ${params.interaction.member.user.id}`,icon_url: this.client.options.getAvatarURL(params.interaction.member.user)},
 						author: { name: this.client.cache.client.user.username, icon_url: this.client.options.getAvatarURL(this.client.cache.client.user) }
 					}],
 					components: [{

@@ -10,7 +10,7 @@ export default class DailyCommand extends Command {
             data: {
                 name: "daily",
                 type: 1,
-                description: "[💰 Economy ] Pegue o seu auxílio do server",
+                description: "[💰 Economy ] Pegue o seu auxílio do servidor.",
             }
         })
     }

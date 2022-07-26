@@ -70,7 +70,7 @@ class Octavia {
                                 }
                             }
                         }
-                        this.options.getGuild(interaction.guild_id)
+                        await this.options.getGuild(interaction.guild_id)
                     }
                     this.cache.guilds[interaction.guild_id].members[interaction.member.user.id] = interaction.member
                     let command = this.handlers.commands.find((x: any) => x.name == interaction.data.name)

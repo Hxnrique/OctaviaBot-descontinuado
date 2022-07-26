@@ -20,7 +20,7 @@ model User {
    blacklist Boolean @default(false)
    rosquinhas Int @default(0)
    last_command DateTime @default(now())
-   timers_daily DateTime @default(now())
+   timers_daily DateTime
    guilds GuildMember[]
 }
 model Guild {

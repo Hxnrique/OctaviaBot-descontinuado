@@ -4,7 +4,7 @@ import { inspect } from "util";
 export default class DevCommand extends Command {
     constructor(Client: Octavia){
         super(Client, {
-            database: true,
+            database: false,
             name: "dev",
             data: {
                 type: 1,
@@ -12,7 +12,7 @@ export default class DevCommand extends Command {
                 description: "[⚙️] Comandos uteis para meus desenvolvedores.",
                 options: [{
                     type: 1,
-                    description: "[🔧 Eval ] Teste scripts js na Octavia",
+                    description: "[🔧 Eval ] Teste scripts js na Octavia.",
                     name: "eval"
                 }]
             }
@@ -23,7 +23,7 @@ export default class DevCommand extends Command {
             return params.res.send({
                 type: 4,
                 data: {
-                    content: `<@!${params.interaction.member.user.id}>, esse comando é apenas para meus desenvolvedores.`,
+                    content: `❌ | <@!${params.interaction.member.user.id}>, esse comando é apenas para meus desenvolvedores.`,
                     flags: 64,
                 }
             })
@@ -33,7 +33,7 @@ export default class DevCommand extends Command {
                 type: 9,
                 data: {
                     title: "Eval",
-                    custom_id: "dev:question1",
+                    custom_id: "dev:questions",
                     components: [{
                         type: 1,
                         components: [{
@@ -53,7 +53,7 @@ export default class DevCommand extends Command {
     }
     async runCollection(params: any): Promise<void> {
         switch(params.interaction.data.custom_id){
-            case "dev:question1": {
+            case "dev:questions": {
                 let code: any;
                 if(params.interaction.getQuestion(0, "eval:code")){
                     code = params.interaction.getQuestion(0, "eval:code")
@@ -64,7 +64,7 @@ export default class DevCommand extends Command {
                 } catch(e){
                     _eval = e
                 }
-                params.res.send({
+                return params.res.send({
                     type: 4,
                     data: {
                         content: "```" + inspect(_eval).slice(0, 1900) + "```",

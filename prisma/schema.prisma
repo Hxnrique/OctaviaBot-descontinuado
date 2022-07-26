@@ -9,19 +9,33 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
+model Octavia {
+  id String @id @default(uuid()) @map("_id")
+  levelGuildsMax Int @default(1)
+  name String @unique
+}
 model User {
    id  String @id @default(auto()) @map("_id") @db.ObjectId
    user_id String @unique
    blacklist Boolean @default(false)
+   rosquinhas Int @default(0)
+   last_command DateTime @default(now())
+   timers_daily DateTime @default(now())
+   guilds GuildMember[]
 }
 model Guild {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   guild_id String @unique
   blacklist Boolean @default(false)
+  auxilio Int @default(5000)
+  money Int @default(0)
+  imposto Int @default(0)
+  level Int @default(1)
 }
 model GuildMember {
+  user_id User @relation(fields: [member_id], references: [user_id])
   member_id String
-  guild_Id String
-  id String @id @default(uuid()) @map("_id")
+  guild_id String
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  coins Int @default(0)
 }

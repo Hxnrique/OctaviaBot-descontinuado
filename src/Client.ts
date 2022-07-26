@@ -41,6 +41,14 @@ class Octavia {
         await this.loadRouters()
         await this.app.listen(process.env.PORT || 8080)
         this.start = Date.now()
+        this.cache.client = {
+            user: await this.options.getUser(),
+            db: await this.prisma.octavia.findUnique({
+                where: {
+                    name: "octavia"
+                }
+            })
+        }
     }
     async loadRouters(): Promise<void> {
         this.router.get("/", (req: Request, res: Response) => {
@@ -62,36 +70,57 @@ class Octavia {
                                 }
                             }
                         }
+                        this.options.getGuild(interaction.guild_id)
                     }
                     this.cache.guilds[interaction.guild_id].members[interaction.member.user.id] = interaction.member
                     let command = this.handlers.commands.find((x: any) => x.name == interaction.data.name)
                     if(!command) return res.send({
                         type: 4,
                         data: {
-                            content: `${interaction.member.user.username}, eu não encontrei esse comando em meu sistema. Se não for pedir mutio, avise a meus developers.`,
+                            content: `❌ | ${interaction.member.user.username}, eu não encontrei esse comando em meu sistema. Se não for pedir mutio, avise a meus developers.`,
                             flags: 64
                         }
                     })
                     interaction.getString = (name: string) => {
                         return interaction.data.options.find((_name: any) => _name.name == name)
                     }
-                    let user, guild;
+                    let user, guild, guildMember;
                     if(command.database){
                         user = await this.prisma.user.findUnique({
                             where: {
-                                user_id: interaction.member.user.id
+                                user_id: interaction.member.user.id,
+                            },
+                            include: {
+                                guilds: true
                             }
                         })
                         if(!user) user = await this.prisma.user.create({
                             data: {
-                                user_id: interaction.member.user.id
+                                user_id: interaction.member.user.id,
+                                last_command: new Date(),
+                            },
+                            include: {
+                                guilds: true
                             }
                         })
+                        if(!user.guilds.find((guild) => guild.guild_id == interaction.guild_id )){
+                            guildMember = await this.prisma.guildMember.create({
+                                data: {
+                                    guild_id: interaction.guild_id,
+                                    user_id: {
+                                        connect: { user_id: interaction.member.user.id}
+                                    }
+                                }
+                            })
+                            user.guilds.push(guildMember)
+                        } else {
+                            guildMember = user.guilds.find((guild: any) => guild.guild_id == interaction.guild_id)
+                        }
                         if(user.blacklist){
                             return res.send({
                                 type: 4,
                                 data: {
-                                    content: `<!@${interaction.member.user.id}>, você está proibido de utilizar meus comandos`,
+                                    content: `❌ | <!@${interaction.member.user.id}>, você está proibido de utilizar meus comandos`,
                                     flags: 64
                                 }
                             })
@@ -110,7 +139,7 @@ class Octavia {
                             return res.send({
                                 type: 4,
                                 data: {
-                                    content: `<!@${interaction.member.user.id}>, O servidor está em minha blacklist`,
+                                    content: `❌ | <!@${interaction.member.user.id}>, O servidor está em minha blacklist`,
                                     flags: 64
                                 }
                             })
@@ -118,7 +147,17 @@ class Octavia {
                     }
                     if(command){
                         return command.run({
-                            database: {user, guild},
+                            database: {user, guild, guildMember},
+                            interaction,
+                            res,
+                            req
+                        })
+                    }
+                }
+                case 3: {
+                    let command = this.handlers.commands.find((x: any) => x.name == interaction.data.custom_id.split(":")[0])
+                    if(command){
+                        return command.runCollection({
                             interaction,
                             res,
                             req
@@ -131,7 +170,7 @@ class Octavia {
                     }
                     let command = this.handlers.commands.find((x: any) => x.name == interaction.data.custom_id.split(":")[0])
                     if(command){
-                        command.runCollection({
+                        return command.runCollection({
                             interaction,
                             res,
                             req

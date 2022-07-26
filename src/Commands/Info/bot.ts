@@ -9,7 +9,7 @@ export default class BotCommand extends Command {
 			data: {
 				name: "bot",
 				type: 1,
-				description: "[🤖]  Tudo e mais um pouco de mim",
+				description: "[🤖]  Tudo e mais um pouco de mim.",
 				options: [
 					{
 						type: 1,
@@ -27,12 +27,11 @@ export default class BotCommand extends Command {
 	}
 	async run(params: any): Promise<void> {
 		let dono = await this.client.options.getUser("485101049548636160")
-		let _client = await this.client.options.getUser(process.env.DISCORD_USER_ID as string)
 		if(params.interaction.getString("invite")){
 			params.res.send({
 				type: 4,
 				data: {
-					content: `❤️[Clique aqui para me convidar](https://discord.com/api/oauth2/authorize?client_id=${_client.id}&permissions=0&scope=bot%20applications.commands)`,
+					content: `❤️[Clique aqui para me convidar](https://discord.com/api/oauth2/authorize?client_id=${this.client.cache.client.user.id}&permissions=0&scope=bot%20applications.commands)`,
 				}
 			})
 		}
@@ -44,7 +43,7 @@ export default class BotCommand extends Command {
 						color: this.client.color,
 						fields: [
 							{
-								value: `Olá <@!${params.interaction.member.user.id}>, eu sou a **${_client.username}**, um bot de economia global e local para seu servidor.`,
+								value: `Olá <@!${params.interaction.member.user.id}>, eu sou a **${this.client.cache.client.user.username}**, um bot de economia global e local para seu servidor.`,
 								name: "🚪| Boas-vindas e Sobre mim"
 							},
 							{
@@ -60,7 +59,7 @@ export default class BotCommand extends Command {
 								value: "Meu desenvolvedor: **"+ dono.username + "/" + dono.id+ "**\nDatabase: **[mongodb](https://www.mongodb.com/pt-br)**\nVersão da api do Discord: **v10**\nBiblioteca auxiliar: **[discord-api-types](https://discord-api-types.dev/)**\nHospedagem: **[Heroku](https://www.heroku.com/)**"
 							}
 						],
-						author: { name: _client.username, icon_url: this.client.options.getAvatarURL(_client) }
+						author: { name: this.client.cache.client.user.username, icon_url: this.client.options.getAvatarURL(this.client.cache.client.user) }
 					}],
 					components: [{
 						type: 1,
@@ -69,7 +68,7 @@ export default class BotCommand extends Command {
 								type: 2,
 								label: "Convite",
 								style: 5,
-								url: `https://discord.com/api/oauth2/authorize?client_id=${_client.id}&permissions=0&scope=bot%20applications.commands`
+								url: `https://discord.com/api/oauth2/authorize?client_id=${this.client.cache.client.user.id}&permissions=0&scope=bot%20applications.commands`
 							},
 							{
 								type: 2,

@@ -1,4 +1,4 @@
-import { APIMessage, APIUser, Routes } from "discord-api-types/v10"
+import { APIGuild, APIMessage, APIUser, Routes } from "discord-api-types/v10"
 import type { Octavia } from "../Client"
 
 class _client {
@@ -12,6 +12,9 @@ class _client {
     getAvatarURL(user: APIUser): string {
         return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
     }
+    getIconURL(guild: APIGuild): string {
+        return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}`
+    }
     async getUser(user_id: string): Promise<void> {
         if(this.client.cache.users[user_id]){
             return this.client.cache.users[user_id]
@@ -21,6 +24,16 @@ class _client {
             this.client.cache.users[user_id] = user
             console.log(`[GET APIUser] ${user.id}`)
             return user
+        }
+    }
+    async getGuild(guild_id: string): Promise<void> {
+        if(this.client.cache.guilds[guild_id]._guild){
+            this.client.cache.guilds[guild_id]._guild
+        } else {
+            let guild = await this.client.rest.get(Routes.guild(guild_id)).catch((e: any) => false)
+            if(!guild)return guild
+            this.client.cache.guilds[guild_id]._guild = guild
+            return guild
         }
     }
     async getMember(guild_id: string,user_id: string): Promise<void> {
@@ -34,8 +47,11 @@ class _client {
             return member
         }
     }
+    async getSlashCommands(): Promise<void> {
+        return await this.client.rest.get(Routes.applicationCommands(process.env.DISCORD_BOT_ID as string)).catch((e: any) => e)
+    }
     async registerCommands(commands: any): Promise<void> {
-       return await this.client.rest.put(Routes.applicationCommands(this.client.config.discordCLIENTId), {
+       return await this.client.rest.put(Routes.applicationCommands(process.env.DISCORD_BOT_ID as string), {
             body: commands
         }).catch((e: any) => e)
     }

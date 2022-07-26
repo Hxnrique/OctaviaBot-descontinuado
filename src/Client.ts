@@ -62,9 +62,6 @@ class Octavia {
                     if(!this.cache.guilds[interaction.guild_id]){
                         this.cache.guilds[interaction.guild_id] = {
                             members: {
-                                get: (user_id: string) => {
-                                    return this.cache.guilds[interaction.guild_id].members[user_id]
-                                },
                                 fetch: async (user_id: string) => {
                                     return this.options.getMember(interaction.guild_id, user_id)
                                 }
@@ -72,7 +69,6 @@ class Octavia {
                         }
                         await this.options.getGuild(interaction.guild_id)
                     }
-                    this.cache.guilds[interaction.guild_id].members[interaction.member.user.id] = interaction.member
                     let command = this.handlers.commands.find((x: any) => x.name == interaction.data.name)
                     if(!command) return res.send({
                         type: 4,

@@ -36,7 +36,7 @@ export default class ConfigCommand extends Command {
                 fields: [
                     {
                         name: "🗺️ | Status", 
-                        value: `Auxílio: 🪙 **${_guild.auxilio.toLocaleString('pt-br', {minimumFractionDigits: 0})}** Coins\nImposto que o servidor cobra: **${_guild.imposto}%** do valor ganho\nLevel do servidor **${_guild.level}/${this.client.cache.client.db.levelGuildsMax}** `
+                        value: `Auxílio: 🪙 **${_guild.auxilio.toLocaleString('pt-br', {minimumFractionDigits: 0})}** Coins\nImposto que o servidor cobra: **${_guild.imposto}%** do valor ganho\nLevel do servidor **${_guild.level}/${this.client.cache.client.db.levelMax}** `
                     },
                 ],
                 author: {icon_url: this.client.options.getAvatarURL(this.client.cache.client.user), name: `${this.client.cache.client.user.username} | Economy`},
@@ -82,12 +82,40 @@ export default class ConfigCommand extends Command {
                     token: params.interaction.token,
                     application_id: params.interaction.application_id
                 },
-                embed_1,
                 users: [ params.interaction.member.user.id ]
             })
         }
     }
     async runCollection(params: any): Promise<void> {
+    // past past past past
+        let guild = this.client.cache.guilds.get(params.interaction.guild_id)._guild
+        let embed_1 = async () => {
+            let _guild = await this.client.prisma.guild.findUnique({
+                where: {
+                    guild_id: params.interaction.guild_id
+                }
+            })
+            if(!_guild) _guild = await this.client.prisma.guild.create({
+                data: {
+                    guild_id: params.interaction.guild_id
+                }
+            })
+            return {
+                description: `Servidor: **${guild.name}**\nO servidor possuí: 🪙 **${Math.floor(_guild.money).toLocaleString('pt-br', {minimumFractionDigits: 0})}** Coins`,
+                fields: [
+                    {
+                        name: "🗺️ | Status", 
+                        value: `Auxílio: 🪙 **${_guild.auxilio.toLocaleString('pt-br', {minimumFractionDigits: 0})}** Coins\nImposto que o servidor cobra: **${_guild.imposto}%** do valor ganho\nLevel do servidor **${_guild.level}/${this.client.cache.client.db.levelMax}** `
+                    },
+                ],
+                author: {icon_url: this.client.options.getAvatarURL(this.client.cache.client.user), name: `${this.client.cache.client.user.username} | Economy`},
+                thumbnail: {url: this.client.options.getIconURL(guild)},
+                color: this.client.color,
+                timestamp: new Date(),
+                footer: { text: `Usado por: ${params.interaction.member.user.id}`,icon_url: this.client.options.getAvatarURL(params.interaction.member.user)}
+            }
+        }
+        // past past past past 
         let cacheMessage = this.client.cache.messageComponents.get(params.interaction.message.interaction.id)
         if(!cacheMessage)return params.res.send({
             type: 4,
@@ -205,7 +233,7 @@ export default class ConfigCommand extends Command {
                         flags: 64
                     }
                 }), this.client.options.editOriginalMessage(cacheMessage.data.interaction.application_id, cacheMessage.data.interaction.token, {
-                    embeds: [await cacheMessage.data.embed_1()]
+                    embeds: [await embed_1()]
                 })
             }
             case "config:imposto:questions": {
@@ -258,12 +286,12 @@ export default class ConfigCommand extends Command {
                         flags: 64
                     }
                 }), this.client.options.editOriginalMessage(cacheMessage.data.interaction.application_id, cacheMessage.data.interaction.token, {
-                    embeds: [await cacheMessage.data.embed_1()]
+                    embeds: [await embed_1()]
                 }) 
             }
             case "config:level_update": {
                 let level = this.client.cache.levelGuilds[_guild.level + 1]
-                if((_guild.level + 1) > this.client.cache.client.db.levelGuildsMax){
+                if((_guild.level + 1) > this.client.cache.client.db.levelMax){
                     return params.res.send({
                         type: 4,
                         data: {
@@ -299,7 +327,7 @@ export default class ConfigCommand extends Command {
                         flags: 64
                     }
                 }), this.client.options.editOriginalMessage(cacheMessage.data.interaction.application_id, cacheMessage.data.interaction.token, {
-                    embeds: [await cacheMessage.data.embed_1()]
+                    embeds: [await embed_1()]
                 }) 
                 
             }

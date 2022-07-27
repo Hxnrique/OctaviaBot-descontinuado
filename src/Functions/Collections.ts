@@ -13,6 +13,7 @@ let Collections = Object({
     },
     levelGuilds: {
         "1": {
+            value: 0,
             works: {
                 "Caçador de bugs": {
                     value: 0,

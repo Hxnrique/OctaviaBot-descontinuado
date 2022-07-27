@@ -11,8 +11,8 @@ datasource db {
 }
 model Octavia {
   id String @id @default(uuid()) @map("_id")
-  levelGuildsMax Int @default(1)
   name String @unique
+  levelMax Int @default(1)
 }
 model User {
    id  String @id @default(auto()) @map("_id") @db.ObjectId

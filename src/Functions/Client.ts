@@ -59,7 +59,7 @@ class _client {
     async createMessage(channel_id: string, data: any): Promise<void> {
         return await this.client.rest.post(Routes.channelMessages(channel_id),{
             body: data
-        }).catch((e: any) => false), console.log(`[GET APIMessage] ${channel_id}`)
+        }).catch((e: any) => console.log(e)), console.log(`[GET APIMessage] ${channel_id}`)
     }
     async editMessage(channel_id: string, message_id: string, newMessageData: any): Promise<void> {
         return await this.client.rest.patch(Routes.channelMessage(channel_id, message_id),{

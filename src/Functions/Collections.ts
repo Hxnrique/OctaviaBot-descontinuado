@@ -18,10 +18,12 @@ let Collections = Object({
                 "Caçador de bugs": {
                     value: 0,
                     experience: 0,
+                    maxEarn: 200
                 },
                 "Caçador de vírus": {
-                    value: 1000,
-                    experience: 5
+                    value: 5000,
+                    experience: 5,
+                    maxEarn: 400
                 },
             }
         },
@@ -29,12 +31,12 @@ let Collections = Object({
             value: 30000,
             works: {
                 "Caçador de lendas": {
-                    value: 1500,
+                    value: 7500,
                     experience: 7,
                     maxEarn: 500
                 },
                 "Caçador de chapéus":{
-                    value: 2000,
+                    value: 12000,
                     experience: 10,
                     maxEarn: 650
                 }

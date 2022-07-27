@@ -21,7 +21,19 @@ model User {
    rosquinhas Int @default(0)
    last_command DateTime @default(now())
    timers_daily DateTime @default("2020-05-23T10:00:00.000Z")
+   timers_work DateTime @default("2020-05-23T10:00:00.000Z")
+   job String @default("Não está em um emprego")
    guilds GuildMember[]
+   jobs UserJobs[]
+}
+model UserJobs {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id User @relation(fields: [user], references: [user_id]) 
+  user String
+  job_name String @unique
+  job_earn Int @default(0)
+  job_experience Int @default(0)
+  job_experience_max Int  @default(0)
 }
 model Guild {
   id String @id @default(auto()) @map("_id") @db.ObjectId

@@ -15,7 +15,8 @@ export default class DailyCommand extends Command {
         })
     }
     async run(params: any): Promise<void> {
-        if(((new Date(params.database.user.timers_daily).getTime() - Date.now()) - (86400000)) < 0){
+        if((Date.now() - (new Date(params.database.user.timers_daily).getTime()) - (86400000)) < 0){
+            console.log((new Date(params.database.user.timers_daily).getTime()) - (86400000))
             let time = Math.floor((new Date(params.database.user.timers_daily).getTime() / 1000) + 85400)
             return params.res.send({
                 type: 4,
@@ -25,6 +26,8 @@ export default class DailyCommand extends Command {
                 }
             })
         }
+        console.log((new Date(params.database.user.timers_daily).getTime()) - (86400000))
+            
         if(params.database.guild.money < 200){
             return params.res.send({
                 type: 4,

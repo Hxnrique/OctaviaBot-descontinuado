@@ -46,13 +46,13 @@ model Guild {
   members GuildMember[]
 }
 model GuildMember {
-  timers_daily DateTime @default("2020-05-23T10:00:00.000Z")
-  timers_work DateTime @default("2020-05-23T10:00:00.000Z")
-  job String
   user_id User @relation(fields: [member_id], references: [user_id])
   member_id String
   guild_id Guild @relation(fields: [guildMember], references: [guild_id])
   guildMember String
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   coins Int @default(0)
+  timers_daily DateTime @default("2020-05-23T10:00:00.000Z")
+  timers_work DateTime @default("2020-05-23T10:00:00.000Z")
+  job String @default("no")
 }

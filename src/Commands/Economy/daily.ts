@@ -61,14 +61,7 @@ export default class DailyCommand extends Command {
             data: {
                 coins: {
                     increment: ganhos
-                }
-            }
-        })
-        await this.client.prisma.user.update({
-            where: {
-                user_id: params.interaction.member.user.id
-            },
-            data: {
+                },
                 timers_daily: new Date()
             }
         })

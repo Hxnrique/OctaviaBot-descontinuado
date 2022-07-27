@@ -20,9 +20,6 @@ model User {
    blacklist Boolean @default(false)
    rosquinhas Int @default(0)
    last_command DateTime @default(now())
-   timers_daily DateTime @default("2020-05-23T10:00:00.000Z")
-   timers_work DateTime @default("2020-05-23T10:00:00.000Z")
-   job String @default("Não está em um emprego")
    guilds GuildMember[]
    jobs GuildMemberJobs[]
 }
@@ -49,6 +46,9 @@ model Guild {
   members GuildMember[]
 }
 model GuildMember {
+  timers_daily DateTime @default("2020-05-23T10:00:00.000Z")
+  timers_work DateTime @default("2020-05-23T10:00:00.000Z")
+  job String
   user_id User @relation(fields: [member_id], references: [user_id])
   member_id String
   guild_id Guild @relation(fields: [guildMember], references: [guild_id])

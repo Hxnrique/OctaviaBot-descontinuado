@@ -94,28 +94,6 @@ class Octavia {
                                 guilds: true
                             }
                         })
-                        if(!user.guilds.find((guild) => guild.guild_id == interaction.guild_id )){
-                            guildMember = await this.prisma.guildMember.create({
-                                data: {
-                                    guild_id: interaction.guild_id,
-                                    user_id: {
-                                        connect: { user_id: interaction.member.user.id}
-                                    }
-                                }
-                            })
-                            user.guilds.push(guildMember)
-                        } else {
-                            guildMember = user.guilds.find((guild: any) => guild.guild_id == interaction.guild_id)
-                        }
-                        if(user.blacklist){
-                            return res.send({
-                                type: 4,
-                                data: {
-                                    content: `❌ | <!@${interaction.member.user.id}>, você está proibido de utilizar meus comandos`,
-                                    flags: 64
-                                }
-                            })
-                        }
                         guild = await this.prisma.guild.findUnique({
                             where: {
                                 guild_id: interaction.guild_id
@@ -126,6 +104,30 @@ class Octavia {
                                 guild_id: interaction.guild_id
                             }
                         })
+                        if(!user.guilds.find((guild) => guild.guildMember == interaction.guild_id )){
+                            guildMember = await this.prisma.guildMember.create({
+                                data: {
+                                    guild_id: {
+                                        connect: {guild_id: interaction.guild_id}
+                                    },
+                                    user_id: {
+                                        connect: { user_id: interaction.member.user.id}
+                                    }
+                                }
+                            })
+                            user.guilds.push(guildMember)
+                        } else {
+                            guildMember = user.guilds.find((guild: any) => guild.guildMember == interaction.guild_id)
+                        }
+                        if(user.blacklist){
+                            return res.send({
+                                type: 4,
+                                data: {
+                                    content: `❌ | <!@${interaction.member.user.id}>, você está proibido de utilizar meus comandos`,
+                                    flags: 64
+                                }
+                            })
+                        }
                         if(guild.blacklist){
                             return res.send({
                                 type: 4,

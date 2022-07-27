@@ -63,12 +63,15 @@ export default class WorkCommand extends Command {
             let jobs;
             jobs = user.jobs
             if(!user.jobs[0]){
-                let _job = await this.client.prisma.userJobs.create({
+                let _job = await this.client.prisma.guildMemberJobs.create({
                     data: {
                         job_name: empregos[0].name,
                         job_earn: empregos[0].maxEarn,
                         job_experience_max: empregos[0].experience,
                         job_experience: 0,
+                        guild_id: {
+                            connect: { guild_id: params.interaction.guild_id}
+                        },
                         user_id: {
                             connect: { user_id: params.interaction.member.user.id}
                         }

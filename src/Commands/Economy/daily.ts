@@ -16,7 +16,6 @@ export default class DailyCommand extends Command {
     }
     async run(params: any): Promise<void> {
         if((Date.now() - (new Date(params.database.user.timers_daily).getTime()) - (86400000)) < 0){
-            console.log((new Date(params.database.user.timers_daily).getTime()) - (86400000))
             let time = Math.floor((new Date(params.database.user.timers_daily).getTime() / 1000) + 85400)
             return params.res.send({
                 type: 4,
@@ -25,14 +24,12 @@ export default class DailyCommand extends Command {
                     flags: 64
                 }
             })
-        }
-        console.log((new Date(params.database.user.timers_daily).getTime()) - (86400000))
-            
-        if(params.database.guild.money < 200){
+        }   
+        if(params.database.guild.auxilio < 200){
             return params.res.send({
                 type: 4,
                 data: {
-                    content: `❌ | <@!${params.interaction.member.user.id}>, o servidor não possuí o minímo de coins que é de 🪙 **200** coins. Então não consigo entregar seu diário.`,
+                    content: `❌ | <@!${params.interaction.member.user.id}>, o servidor não possuí o minímo de coins em seu auxílio que é de 🪙 **200** coins. Então não consigo entregar seu diário.`,
                     flags: 64
                 }
             })

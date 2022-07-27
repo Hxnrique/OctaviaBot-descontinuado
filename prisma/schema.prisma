@@ -24,11 +24,13 @@ model User {
    timers_work DateTime @default("2020-05-23T10:00:00.000Z")
    job String @default("Não está em um emprego")
    guilds GuildMember[]
-   jobs UserJobs[]
+   jobs GuildMemberJobs[]
 }
-model UserJobs {
+model GuildMemberJobs {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   user_id User @relation(fields: [user], references: [user_id]) 
+  guild_id Guild @relation(fields: [guildMember], references: [guild_id])
+  guildMember String
   user String
   job_name String @unique
   job_earn Int @default(0)
@@ -43,11 +45,14 @@ model Guild {
   money Int @default(0)
   imposto Int @default(0)
   level Int @default(1)
+  membersJobs GuildMemberJobs[]
+  members GuildMember[]
 }
 model GuildMember {
   user_id User @relation(fields: [member_id], references: [user_id])
   member_id String
-  guild_id String
+  guild_id Guild @relation(fields: [guildMember], references: [guild_id])
+  guildMember String
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   coins Int @default(0)
 }

@@ -15,8 +15,8 @@ export default class DailyCommand extends Command {
         })
     }
     async run(params: any): Promise<void> {
-        if((Date.now() - (new Date(params.database.user.timers_daily).getTime()) - (86400000)) < 0){
-            let time = Math.floor((new Date(params.database.user.timers_daily).getTime() / 1000) + 85400)
+        if((Date.now() - (new Date(params.database.guildMember.timers_daily).getTime()) - (86400000)) < 0){
+            let time = Math.floor((new Date(params.database.guildMember.timers_daily).getTime() / 1000) + 85400)
             return params.res.send({
                 type: 4,
                 data: {

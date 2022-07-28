@@ -94,6 +94,7 @@ export default class WorkCommand extends Command {
                     token: params.interaction.token,
                     application_id: params.interaction.application_id
                 },
+                empregos,
                 users: [ params.interaction.member.user.id ]
             })
             return params.res.send({
@@ -118,15 +119,126 @@ export default class WorkCommand extends Command {
                             custom_id: "work:jobs:select_1",
                             options: empregos_options,
                             placeholder: "Empregos disponíveis para você:",
-                            max_values: 1,
-                            min_values: 1
+                            minValues: 1,
+                            maxValues: 1
                         }]
                     }],
                 }
             })
         }
     }
-    async runCollection(parans: any): Promise<void> {
+    async runCollection(params: any): Promise<void> {
+        let cacheMessage = this.client.cache.messageComponents.get(params.interaction.message.interaction.id)
+        if(!cacheMessage)return params.res.send({
+            type: 4,
+            data: {
+                content: ` | <@!${params.interaction.member.user.id}>, essa interação foi descartada, utilize o comando novamente.`,
+                flags: 64
+            }
+        })
+        if(!params.interaction.member.user.id.includes(cacheMessage.data.users))return params.res.send({
+            type: 4,
+            data: {   
+                content: `❌ | <@!${params.interaction.member.user.id}>, esse painel de configurações não é para você.`,
+                flags: 64
+            }
+        })
+        switch(params.interaction.data.custom_id){
+            case "work:jobs:select_1": {
+                let job = cacheMessage.data.empregos.find((a: any) => a.name == params.interaction.data.values[0])
+                let user = await this.client.prisma.user.findUnique({
+                    where: {
+                        user_id: params.interaction.member.user.id
+                    },
+                    include: {
+                        jobs: true,
+                        guilds: true
+                    }
+                })
+                if(!user) user = await this.client.prisma.user.create({
+                    data: {
+                        user_id: params.member.user.id
+                    },
+                    include: {
+                        jobs: true,
+                        guilds: true
+                    }
+                })
+                let guildMember = user.guilds.find((a: any) => a.guildMember == params.interaction.guild_id)
+                if(!guildMember){
+                    guildMember = await this.client.prisma.guildMember.create({
+                        data: {
+                            guild_id: {
+                                connect: { guild_id: params.interaction.guild_id }
+                            },
+                            user_id: {
+                                connect: { user_id: params.interaction.member.user.id}
+                            }
+                        }
+                    })
 
+                }
+                if(guildMember.job == "no"){
+                    await this.client.prisma.guildMember.update({
+                        where: {
+                            id: guildMember.id
+                        },
+                        data: {
+                            job: user.jobs.find((a: any) => a.job_name ==  job.name)?.id
+                        }
+                    })
+                    return params.res.send({
+                        type: 4,
+                        data: {
+                            content: `✅ | <@!${params.interaction.member.user.id}>, agora seu novo emprego é o ${job.name}`,
+                            flags: 64
+                        }
+                    }), this.client.options.editOriginalMessage(cacheMessage.data.interaction.application_id, cacheMessage.data.interaction.token, {
+                        embeds: [],
+                        components: [],
+                        content: "❌"
+                    }) 
+                } else {
+                    if(user.jobs.find((a: any) => a.id ==  guildMember?.job)){
+                        return params.res.send({
+                            type: 4,
+                            data: {
+                                content: `❌ | <@!${params.interaction.member.user.id}>, não é possível pegar este emprego, você ja está nele.`,
+                                flags: 64
+                            }
+                        })
+                    }
+                    if((Date.now() - (new Date(guildMember.timers_work).getTime()) - (600000)) < 0){
+                        let time = Math.floor((new Date(guildMember.timers_work).getTime() / 1000) + 600)
+                        return params.res.send({
+                            type: 4,
+                            data: {
+                                content: `❌ | <@!${params.interaction.member.user.id}>, você ja está em um emprego, espere o slowmode dele acabar. Volte aqui <t:${time}:R>, estou esperando você.`,
+                                flags: 64
+                            }
+                        })
+                    }
+                    await this.client.prisma.guildMember.update({
+                        where: {
+                            id: guildMember.id 
+                        },
+                        data: {
+                            job: user.jobs.find((a: any) => a.job_name ==  job.name)?.id
+                        }
+                    })
+                    return params.res.send({
+                        type: 4,
+                        data: {
+                            content: `✅ | <@!${params.interaction.member.user.id}>, agora seu novo emprego é o ${job.name}`,
+                            flags: 64
+                        }
+                    }), this.client.options.editOriginalMessage(cacheMessage.data.interaction.application_id, cacheMessage.data.interaction.token, {
+                        embeds: [],
+                        components: [],
+                        content: "❌"
+                    }) 
+                }
+            }
+        }
     }
 }

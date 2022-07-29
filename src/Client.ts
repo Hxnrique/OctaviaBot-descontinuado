@@ -28,7 +28,7 @@ class Octavia {
         this.cache = Collections
         this.app = Express()
         this.router = Router()
-        this.color = this.options.color("#bf9ee9")
+        this.color = this.options.color("#CC0000")
         this.prisma = new PrismaClient()
     }
     uptime(): number {
